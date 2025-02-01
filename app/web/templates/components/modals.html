@@ -1,0 +1,22 @@
+<!-- 编辑模态框模板 -->
+<template id="edit-modal-template">
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑人员信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <!-- 表单字段将由 JS 动态生成 -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="save-edit">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template> 

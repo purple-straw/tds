@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组织数据对比</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css', v='1.0.1') }}">
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/cards.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/modal.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/table.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/forms.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/buttons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/components/navbar.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            padding-top: 60px;
+            min-height: 100vh;
+        }
+
+        .container-fluid {
+            padding: 0 var(--spacing-lg);
+            width: 95%;
+            max-width: none;
+        }
+
+        .main-content {
+            margin-right: 320px;
+            padding: var(--spacing-lg) 0;
+            min-height: calc(100vh - 60px);
+        }
+
+        .navbar {
+            background: var(--bg-white) !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar-brand {
+            color: var(--text-color) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            transition: var(--transition-normal);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .comparison-card {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .comparison-card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comparison-card .card-header h5 {
+            margin: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .comparison-table {
+            width: 100%;
+            background: var(--bg-white);
+        }
+
+        .comparison-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .comparison-table td {
+            text-align: center;
+        }
+
+        .difference-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+
+        .difference-badge.success {
+            background-color: rgba(82, 196, 26, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .difference-badge.danger {
+            background-color: rgba(255, 77, 79, 0.1);
+            color: var(--danger-color);
+        }
+
+        .spinner-border {
+            color: var(--primary-color);
+        }
+
+        /* 调整右侧统计面板 */
+        .stats-panel {
+            width: 300px;
+            right: var(--spacing-lg);
+        }
+
+        @media (max-width: 1600px) {
+            .container-fluid {
+                max-width: 1400px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-right: 0;
+                padding: var(--spacing-md);
+            }
+            
+            .stats-panel {
+                position: static;
+                width: 100%;
+                margin-top: var(--spacing-lg);
+            }
+        }
+
+        /* 调整表格容器 */
+        .table-responsive {
+            margin: 0;
+            border-radius: var(--border-radius-md);
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+        }
+
+        /* 调整模态框内的表格 */
+        .modal .table-responsive {
+            max-height: calc(90vh - 150px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 将控制面板改为顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>组织数据对比
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarControls">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarControls">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="displayControl" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cogs me-1"></i>显示控制
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="dropdown-item">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="show-total" checked>
+                                        <label class="form-check-label" for="show-total">
+                                            人员信息对比
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown-item">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="show-rank" checked>
+                                        <label class="form-check-label" for="show-rank">
+                                            职级分布对比
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="main-content">
+            <!-- 总人数对比 -->
+            <div class="card comparison-card" id="total-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-users me-2"></i>人员信息对比</h5>
+                </div>
+                <div class="card-body" id="total-comparison">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 职级分布对比 -->
+            <div class="card comparison-card" id="rank-card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>职级分布对比</h5>
+                        <select class="form-select form-select-sm" id="series-filter" style="width: auto; min-width: 120px;">
+                            <option value="P序列" selected>P序列</option>
+                            <option value="M序列">M序列</option>
+                            <option value="B序列">B序列</option>
+                            <option value="all">全部序列</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="rank-comparison">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧统计面板 -->
+        <div class="stats-panel">
+            <h5><i class="fas fa-chart-pie me-2"></i>数据概览</h5>
+            <div class="stat-item" data-clickable="true" data-type="api">
+                <div class="stat-label">组织分析详情</div>
+                <div class="stat-value" id="api-total-stat">
+                    <a href="#" style="color: inherit; text-decoration: none;">查看详情</a>
+                </div>
+            </div>
+            <div class="stat-item" data-clickable="true">
+                <div class="stat-label">数据库人员信息</div>
+                <div class="stat-value" id="db-total-stat">
+                    <a href="#" style="color: inherit; text-decoration: none;">查看详情</a>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">数据匹配率</div>
+                <div class="stat-value" id="match-rate-stat">计算中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改模态框结构 -->
+    <div class="modal fade" id="dbDataModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-database me-2"></i>
+                        数据库人员信息
+                    </h5>
+                    <div class="query-time ms-3">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>查询耗时：<span id="query-time">0</span> ms
+                        </small>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 添加 iframe 容器 -->
+                    <div id="iframe-container" style="display: none;">
+                        <iframe id="external-page" 
+                                style="width: 100%; height: 100%; border: none;" 
+                                src=""></iframe>
+                    </div>
+                    <!-- 原有的表格容器 -->
+                    <div id="table-container">
+                        <div class="table-responsive">
+                            <table class="table table-navicat">
+                                <thead>
+                                    <tr id="table-headers"></tr>
+                                </thead>
+                                <tbody id="table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* 卡片基础样式 */
+.card {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* 比较卡片特殊样式 */
+.comparison-card {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    transition: transform 0.3s ease;
+}
+
+.comparison-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-body {
+    padding: var(--spacing-lg);
+}
+
+/* 职级分布对比卡片 */
+#rank-card {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+#rank-card .card-header {
+    padding: 1rem 1.5rem;
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#rank-card .card-header .d-flex {
+    gap: 1rem;
+}
+
+#rank-card .card-header h5 {
+    margin: 0;
+    flex: 1;
+}
+
+#series-filter {
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 200px !important;
+    font-size: 0.875rem;
+    padding: 0.25rem 2rem 0.25rem 0.5rem;
+    background-position: right 0.5rem center;
+    border-color: var(--border-color);
+}
+
+#series-filter:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+#rank-card .card-body {
+    padding: 1.5rem;
+    min-height: 400px;
+    overflow-x: auto;
+}
+
+#rank-comparison {
+    min-width: 800px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 图表容器响应式布局 */
+@media (min-width: 1920px) {
+    #rank-comparison {
+        min-width: 1200px;
+    }
+}
+
+@media (max-width: 1366px) {
+    #rank-comparison {
+        min-width: 600px;
+    }
+}
+
+/* 确保图表内容完整显示 */
+.comparison-card {
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-white);
+    margin-bottom: 1.5rem;
+}
+
+.comparison-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.comparison-card .card-body {
+    padding: 1.5rem;
+    position: relative;
+}
+
+/* 图表加载状态 */
+.comparison-card .spinner-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 图表工具提示 */
+.comparison-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    z-index: 1000;
+}
+
+/* 图表图例样式 */
+.comparison-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+}
+
+.comparison-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* 图表网格线样式 */
+.comparison-grid line {
+    stroke: var(--border-color);
+    stroke-opacity: 0.1;
+}
+
+/* 图表坐标轴样式 */
+.comparison-axis path,
+.comparison-axis line {
+    stroke: var(--border-color);
+} 

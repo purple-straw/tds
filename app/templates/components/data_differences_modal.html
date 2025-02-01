@@ -1,0 +1,455 @@
+<!-- 数据差异对比模态窗 -->
+<div class="modal fade" id="dataDifferencesModal" tabindex="-1" aria-labelledby="dataDifferencesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 bg-gradient">
+                <h5 class="modal-title" id="dataDifferencesModalLabel">
+                    <i class="fas fa-chart-pie text-warning me-2"></i>
+                    <span class="gradient-text">数据差异分析</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="glass-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="circular-progress me-3">
+                                    <span class="match-rate gradient-text display-6 fw-bold"></span>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 text-muted">数据匹配率</h6>
+                                    <small class="text-muted">
+                                        匹配项：<span class="matched-count fw-bold"></span>/<span class="total-count"></span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="progress-wrapper">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar progress-gradient" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table table-hover modern-table">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase">对比字段</th>
+                                <th class="text-uppercase">API数据</th>
+                                <th class="text-uppercase">数据库数据</th>
+                            </tr>
+                        </thead>
+                        <tbody id="differencesList">
+                            <!-- 差异数据将通过JavaScript动态插入 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light">
+                <button type="button" class="btn btn-gradient" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 渐变背景 */
+.bg-gradient {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+/* 玻璃拟态效果 */
+.glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+/* 渐变文字 */
+.gradient-text {
+    background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 圆形进度指示器 */
+.circular-progress {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--progress-color) var(--progress), #eee var(--progress));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.circular-progress::before {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+}
+
+.circular-progress span {
+    position: relative;
+    font-size: 1.5rem;
+}
+
+/* 现代化表格样式 */
+.table-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.modern-table {
+    margin-bottom: 0;
+    background: white;
+}
+
+.modern-table thead {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.modern-table thead th {
+    color: #2c3e50;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: none;
+    padding: 15px;
+}
+
+.modern-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.modern-table tbody tr:hover {
+    transform: translateX(5px);
+    background: rgba(132, 250, 176, 0.1);
+}
+
+.modern-table td {
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #eee;
+}
+
+/* 渐变按钮 */
+.btn-gradient {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    border: none;
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 进度条样式 */
+.progress-wrapper {
+    background: white;
+    border-radius: 10px;
+    padding: 3px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.progress-gradient {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/* 动画效果 */
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal.show .modal-dialog {
+    animation: slideIn 0.3s ease forwards;
+}
+
+/* 更新现有动画效果，使其更加明显 */
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(-2deg); }
+    75% { transform: translateY(10px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-10px) rotate(-5deg); }
+    75% { transform: translateX(10px) rotate(5deg); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    to { transform: rotate(360deg) scale(1); }
+}
+
+/* 新增炫酷动画效果 */
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 5px rgba(132, 250, 176, 0.5); }
+    50% { box-shadow: 0 0 30px rgba(132, 250, 176, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(132, 250, 176, 0.5); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    70% { transform: scale(0.9); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rubberBand {
+    0% { transform: scale(1); }
+    30% { transform: scaleX(1.25) scaleY(0.75); }
+    40% { transform: scaleX(0.75) scaleY(1.25); }
+    60% { transform: scaleX(1.15) scaleY(0.85); }
+    100% { transform: scale(1); }
+}
+
+/* 应用新的动画效果 */
+.modal-content {
+    animation: float 8s ease-in-out infinite;
+}
+
+.glass-card {
+    animation: glowPulse 3s infinite;
+}
+
+.glass-card:hover {
+    animation: rubberBand 1s;
+    transform: translateY(-5px);
+}
+
+.circular-progress {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.circular-progress:hover {
+    animation: rotate 2s linear infinite;
+}
+
+.fas.fa-exclamation-circle {
+    animation: rotate 3s linear infinite;
+}
+
+.fas.fa-exclamation-circle:hover {
+    animation: shake 0.5s infinite;
+}
+
+.modern-table tbody tr {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.modern-table tbody tr.animate {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* 匹配率显示增强 */
+.match-rate {
+    position: relative;
+    z-index: 1;
+}
+
+.match-rate::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, #84fab0, #8fd3f4);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.match-rate:hover::after {
+    opacity: 0.2;
+    animation: pulse 1s infinite;
+}
+
+.match-rate.warning {
+    animation: shake 0.8s ease-in-out infinite;
+}
+
+/* 进度条动画增强 */
+.progress-bar {
+    background: linear-gradient(-45deg, #84fab0, #8fd3f4, #84fab0);
+    background-size: 200% 200%;
+    animation: gradientMove 3s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 表头动画 */
+.modern-table thead th {
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-table thead th::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 按钮动画增强 */
+.btn-gradient {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+    transform: scale(0);
+    transition: transform 0.3s;
+}
+
+.btn-gradient:hover::before {
+    transform: scale(1);
+    animation: ripple 1s linear;
+}
+
+@keyframes ripple {
+    from { transform: scale(0); opacity: 1; }
+    to { transform: scale(1); opacity: 0; }
+}
+</style>
+
+<script>
+function showDataDifferences() {
+    fetch('/api/data/differences')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('获取数据差异失败:', data.error);
+                return;
+            }
+
+            const differences = data.data.differences;
+            const matchedCount = data.data.matched_count;
+            const totalCount = data.data.total_count;
+            const matchRate = data.data.match_rate;
+
+            // 更新匹配率和计数
+            document.querySelector('.match-rate').textContent = `${matchRate}%`;
+            document.querySelector('.matched-count').textContent = matchedCount;
+            document.querySelector('.total-count').textContent = totalCount;
+            
+            // 更新圆形进度条
+            const circularProgress = document.querySelector('.circular-progress');
+            circularProgress.style.setProperty('--progress', `${matchRate}%`);
+            
+            // 设置进度条颜色
+            let progressColor = '#dc3545';  // 红色
+            if (matchRate >= 90) {
+                progressColor = '#28a745';  // 绿色
+            } else if (matchRate >= 70) {
+                progressColor = '#ffc107';  // 黄色
+            }
+            circularProgress.style.setProperty('--progress-color', progressColor);
+            
+            // 更新线性进度条
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = `${matchRate}%`;
+            
+            // 清空并填充差异表格
+            const tbody = document.getElementById('differencesList');
+            tbody.innerHTML = '';
+            
+            differences.forEach((diff, index) => {
+                const row = document.createElement('tr');
+                
+                // 添加动画类
+                setTimeout(() => {
+                    row.classList.add('animate');
+                }, index * 100);
+                
+                const fieldName = diff.field.replace(/_/g, ' ').replace(/职级分布/g, '职级分布 - ');
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                            <span class="fw-bold">${fieldName}</span>
+                        </div>
+                    </td>
+                    <td class="text-danger">${diff.api_value}</td>
+                    <td class="text-primary">${diff.db_value}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+
+            // 添加匹配率警告效果
+            const matchRateElement = document.querySelector('.match-rate');
+            if (matchRate < 70) {
+                matchRateElement.classList.add('warning');
+            } else {
+                matchRateElement.classList.remove('warning');
+            }
+
+            // 显示模态窗
+            const modal = new bootstrap.Modal(document.getElementById('dataDifferencesModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('请求失败:', error);
+        });
+}
+</script> 

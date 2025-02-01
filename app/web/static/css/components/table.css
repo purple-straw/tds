@@ -1,0 +1,178 @@
+/* 表格基础样式 */
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    background: var(--bg-white);
+    border-collapse: collapse;
+    table-layout: auto;  /* 改为自动布局 */
+}
+
+/* 表格头部样式 */
+.table th {
+    padding: var(--spacing-md);
+    background: var(--bg-light);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;  /* 防止表头换行 */
+    min-width: 100px;     /* 设置最小宽度 */
+}
+
+/* 表格单元格样式 */
+.table td {
+    padding: var(--spacing-md);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;  /* 防止内容换行 */
+    overflow: hidden;
+    text-overflow: ellipsis;  /* 超出显示省略号 */
+    max-width: 200px;     /* 设置最大宽度 */
+}
+
+/* 表格容器 */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    width: 100%;
+    max-height: 70vh;  /* 设置最大高度 */
+}
+
+/* 特定列宽度设置 */
+.table th[data-field="id"],
+.table td[data-field="id"] {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.table th[data-field="name"],
+.table td[data-field="name"] {
+    min-width: 100px;
+    max-width: 150px;
+}
+
+.table th[data-field="level"],
+.table td[data-field="level"] {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.table th[data-field="gender"],
+.table td[data-field="gender"] {
+    min-width: 60px;
+    max-width: 80px;
+}
+
+.table th[data-field="per_code"],
+.table td[data-field="per_code"] {
+    min-width: 120px;
+    max-width: 160px;
+}
+
+.table th[data-field="manage_name"],
+.table td[data-field="manage_name"] {
+    min-width: 100px;
+    max-width: 150px;
+}
+
+.table th[data-field="join_work_date"],
+.table td[data-field="join_work_date"] {
+    min-width: 120px;
+    max-width: 160px;
+}
+
+.table th[data-field="status"],
+.table td[data-field="status"] {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+/* 操作列固定宽度 */
+.table th:last-child,
+.table td:last-child {
+    min-width: 160px;
+    max-width: 160px;
+    text-align: center;
+}
+
+/* 大屏幕适配 */
+@media (min-width: 1920px) {
+    .table-responsive {
+        max-height: 80vh;
+    }
+    
+    .table td {
+        max-width: 300px;  /* 大屏幕下允许更宽的单元格 */
+    }
+}
+
+/* 小屏幕适配 */
+@media (max-width: 1366px) {
+    .table td {
+        max-width: 150px;  /* 小屏幕下减小单元格最大宽度 */
+    }
+    
+    .table-responsive {
+        max-height: 60vh;
+    }
+}
+
+/* 表格悬停效果 */
+.table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    cursor: pointer;
+}
+
+/* 滚动条样式 */
+.table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 表格行悬停效果 */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 固定表头 */
+.table-fixed-header th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--bg-light);
+}
+
+/* 表格在模态框中的样式 */
+.modal-xl .table-responsive {
+    height: calc(100% - 2rem);
+    overflow: auto;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .table-responsive {
+        margin: 0 calc(-1 * var(--spacing-sm));
+        width: calc(100% + var(--spacing-md));
+    }
+    
+    .table th,
+    .table td {
+        padding: var(--spacing-sm);
+    }
+} 

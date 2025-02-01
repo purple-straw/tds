@@ -1,0 +1,5 @@
+include app/web/static/css/*.css
+include app/web/static/js/*.js
+include app/web/templates/*.html
+include app/web/templates/components/*.html
+recursive-include app/web/static * 

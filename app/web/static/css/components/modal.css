@@ -1,0 +1,114 @@
+/* 模态框基础样式 */
+.modal {
+    z-index: var(--z-modal);
+}
+
+.modal-backdrop {
+    z-index: var(--z-modal-backdrop);
+}
+
+/* 标准模态框 */
+.modal-dialog {
+    margin: var(--spacing-lg) auto;
+    max-width: 600px;
+}
+
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--bg-light);
+    border-top: 1px solid var(--border-color);
+}
+
+/* 大型模态框 */
+.modal-xl {
+    max-width: 1200px !important;
+    width: 90%;
+    margin: var(--spacing-lg) auto;
+}
+
+.modal-xl .modal-content {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-xl .modal-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* 编辑表单模态框 */
+#editModal .modal-content {
+    max-height: 90vh;
+}
+
+#editModal .modal-body {
+    max-height: calc(90vh - 130px);
+    overflow-y: auto;
+}
+
+/* 编辑表单滚动条样式 */
+#editForm {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: var(--spacing-md);
+}
+
+#editForm::-webkit-scrollbar {
+    width: 8px;
+}
+
+#editForm::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+}
+
+#editForm::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+#editForm::-webkit-scrollbar-thumb:hover {
+    background: var(--color-dark);
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .modal-xl {
+        max-width: 95% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: var(--spacing-sm);
+        max-width: calc(100% - var(--spacing-md));
+    }
+    
+    .modal-xl .modal-content {
+        height: 90vh;
+    }
+    
+    .modal-body {
+        padding: var(--spacing-md);
+    }
+} 

@@ -1,0 +1,914 @@
+/* Z-index 层级管理 */
+:root {
+    --z-modal-backdrop: 1200;
+    --z-modal: 1300;
+    --z-navbar: 1100;
+    --z-dropdown: 1110;
+}
+
+/* 基础样式 */
+body {
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 50%, #e8f5e9 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+    padding-top: 4.5rem;
+}
+
+/* 布局 */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 250px minmax(700px, 1fr) 250px;
+    gap: 3rem;
+    position: relative;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+}
+
+/* 标题样式 */
+.page-title {
+    color: #2c3e50;
+    margin: 1rem 0 3rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    padding: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.page-title:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 4px;
+    background: linear-gradient(to right, #28a745, #20c997);
+    border-radius: 2px;
+}
+
+.page-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 4px;
+    background: linear-gradient(to right, #20c997, #28a745);
+    border-radius: 2px;
+}
+
+/* 标题容器 */
+.title-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.title-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(to right, #28a745, #20c997);
+}
+
+/* 卡片样式 */
+.comparison-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    transition: transform 0.3s ease;
+}
+
+.comparison-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 修改卡片头部的通用样式 */
+.card-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 左侧控制面板 */
+.control-panel {
+    position: fixed;
+    width: 250px;
+    top: 5rem;
+    left: calc((100% - 1400px) / 2 + 2rem);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    height: fit-content;
+    z-index: 100;
+}
+
+.control-panel h5 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.control-item {
+    margin-bottom: 1.5rem;
+}
+
+.control-item label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* 右侧统计面板 */
+.stats-panel {
+    position: fixed;
+    width: 250px;
+    top: 5rem;
+    right: calc((100% - 1400px) / 2 + 2rem);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    height: fit-content;
+    z-index: 100;
+}
+
+.stats-panel h5 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid #e9ecef;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.stats-panel h5 i {
+    margin-right: 0.5rem;
+    color: #28a745;
+}
+
+.stat-item {
+    margin-bottom: 1rem;
+    padding: 1.2rem;
+    background: rgba(248, 249, 250, 0.8);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.stat-item:hover {
+    background: rgba(233, 236, 239, 0.9);
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-item a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    text-align: center;
+}
+
+.stat-value a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.stat-value a:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+/* 状态样式 */
+.matched {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.unmatched {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* 无差异提示 */
+.no-difference {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(212, 237, 218, 0.9) 0%, rgba(195, 230, 203, 0.9) 100%);
+    border: none;
+    border-radius: 12px;
+    color: #155724;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.1);
+    animation: pulse 2s infinite;
+}
+
+.no-difference i {
+    font-size: 2em;
+    margin-right: 0.5rem;
+    color: #28a745;
+    animation: bounce 1s infinite;
+}
+
+/* 表格样式 */
+.table-navicat {
+    font-family: 'Consolas', monospace;
+    font-size: 0.85rem;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+.table-navicat th {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-navicat td {
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    white-space: nowrap;
+}
+
+.table-navicat tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-navicat tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* 动画 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* 主要内容区域 */
+.main-content {
+    grid-column: 2;
+    min-width: 0;
+    padding-top: 1rem;
+}
+
+/* 响应式布局 */
+@media (max-width: 1400px) {
+    .container {
+        grid-template-columns: 220px minmax(600px, 1fr) 220px;
+        max-width: 1200px;
+        gap: 2rem;
+    }
+    
+    .control-panel {
+        width: 220px;
+        left: calc((100% - 1200px) / 2 + 1.5rem);
+    }
+    
+    .stats-panel {
+        width: 220px;
+        right: calc((100% - 1200px) / 2 + 1.5rem);
+    }
+}
+
+@media (max-width: 1200px) {
+    body {
+        padding-top: 4.5rem;
+    }
+    
+    .container {
+        grid-template-columns: 1fr;
+        max-width: 900px;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .control-panel, .stats-panel {
+        position: static;
+        width: 100%;
+        margin: 2rem 0;
+        padding: 1.5rem;
+    }
+    
+    .main-content {
+        grid-column: 1;
+    }
+}
+
+/* 模态框样式 */
+.modal-dialog {
+    margin: 1.75rem auto;
+    max-width: 600px;
+}
+
+.modal-content {
+    max-height: calc(100vh - 3.5rem);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* 表单样式优化 */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+    
+    .modal-content {
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+}
+
+/* 表格容器样式 */
+#table-container {
+    height: 100%;
+}
+
+.table-responsive {
+    height: 100%;
+    overflow: auto;
+    border-radius: 0.25rem;
+}
+
+/* iframe 容器样式 */
+#iframe-container {
+    height: 100%;
+    min-height: 600px;
+}
+
+#external-page {
+    width: 100%;
+    height: 100%;
+    border: none;
+    min-height: 600px;
+}
+
+/* 表格头固定 */
+.table-navicat thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* 表格样式优化 */
+.table-navicat {
+    margin-bottom: 0;
+}
+
+.table-navicat td {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* 表格悬停效果 */
+.table-navicat tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+/* 特定列的宽度设置 */
+.table-navicat th[data-field="name"],
+.table-navicat td[data-field="name"] {
+    min-width: 100px;
+    max-width: 150px;
+}
+
+.table-navicat th[data-field="id"],
+.table-navicat td[data-field="id"] {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.table-navicat th[data-field="level"],
+.table-navicat td[data-field="level"] {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.table-navicat th[data-field="gender"],
+.table-navicat td[data-field="gender"] {
+    min-width: 60px;
+    max-width: 80px;
+}
+
+.query-time {
+    font-size: 0.9em;
+    color: #6c757d;
+    border-left: 1px solid #dee2e6;
+    padding-left: 1rem;
+}
+
+.modal-title {
+    margin-bottom: 0;
+    margin-right: 1rem;
+}
+
+/* 修复模态窗口关闭后的样式问题 */
+body.modal-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+}
+
+.modal-backdrop {
+    z-index: var(--z-modal-backdrop);
+}
+
+.modal {
+    z-index: var(--z-modal);
+    padding-top: 1rem;
+}
+
+/* 确保模态窗口关闭后页面可以正常滚动 */
+body:not(.modal-open) {
+    overflow: auto !important;
+    padding-right: 0 !important;
+}
+
+/* 导航栏样式 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px);
+    z-index: var(--z-navbar);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #2c3e50 !important;
+}
+
+.navbar-brand i {
+    color: #28a745;
+}
+
+/* 导航栏下拉菜单样式优化 */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    z-index: var(--z-dropdown);
+}
+
+.dropdown-item {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #495057 !important;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #28a745 !important;
+}
+
+.nav-link i {
+    color: #28a745;
+}
+
+/* 确保导航栏在所有元素之上 */
+.modal-backdrop {
+    z-index: var(--z-modal-backdrop);
+}
+
+.modal {
+    z-index: var(--z-modal);
+}
+
+.navbar {
+    z-index: var(--z-navbar);
+}
+
+.dropdown-menu {
+    z-index: var(--z-dropdown);
+}
+
+/* 新增按钮容器 */
+.add-button-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+}
+
+/* 新增按钮样式 */
+.add-button {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+}
+
+.add-button i {
+    font-size: 0.9em;
+}
+
+/* 模态框标题栏按钮样式 */
+.modal-header .btn-success {
+    padding: 0.25rem 0.8rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.modal-header .btn-success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+}
+
+.modal-header .btn-success i {
+    font-size: 0.8em;
+}
+
+/* 编辑模态框样式 */
+#editModal .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+#editModal .modal-content {
+    max-height: 90vh; /* 设置最大高度为视窗高度的90% */
+    display: flex;
+    flex-direction: column;
+}
+
+#editModal .modal-header {
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#editModal .modal-body {
+    padding: 1.5rem;
+    overflow-y: auto; /* 添加垂直滚动 */
+    max-height: calc(90vh - 130px); /* 减去header和footer的高度 */
+}
+
+#editModal .modal-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* 表单组样式 */
+#editModal .form-group {
+    margin-bottom: 1rem;
+}
+
+#editModal .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+#editModal .form-control {
+    padding: 0.5rem 0.75rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+    #editModal .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    #editModal .modal-content {
+        max-height: calc(100vh - 1rem);
+    }
+    
+    #editModal .modal-body {
+        max-height: calc(100vh - 140px);
+        padding: 1rem;
+    }
+}
+
+/* 编辑表单模态窗口样式 */
+#editForm {
+    max-height: 60vh;  /* 设置表单最大高度 */
+    overflow-y: auto;  /* 启用垂直滚动 */
+    padding-right: 10px;  /* 为滚动条预留空间 */
+}
+
+/* 美化滚动条 */
+#editForm::-webkit-scrollbar {
+    width: 8px;
+}
+
+#editForm::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#editForm::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#editForm::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 表单内部元素样式 */
+#editForm .mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+#editForm .form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+#editForm .form-control,
+#editForm .form-select {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+
+/* 编辑表单模态窗口响应式调整 */
+@media (max-height: 600px) {
+    #editForm {
+        max-height: 50vh;
+    }
+}
+
+/* 查看详情模态窗样式 */
+.modal-xl {
+    max-width: 1200px !important;
+    width: 90%;
+    margin: 1.75rem auto;
+}
+
+.modal-xl .modal-content {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-xl .modal-header {
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-xl .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.modal-xl .modal-footer {
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* 表格在大模态窗中的样式 */
+.modal-xl .table-responsive {
+    height: calc(100% - 2rem);
+    overflow: auto;
+}
+
+.modal-xl .table {
+    margin-bottom: 0;
+}
+
+.modal-xl .table th {
+    position: sticky;
+    top: 0;
+    background: #f8f9fa;
+    z-index: 1;
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .modal-xl {
+        max-width: 95% !important;
+        margin: 1rem auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-xl .modal-content {
+        height: 90vh;
+    }
+}
+
+/* 职级分布对比卡片样式 */
+#rank-card .card-header {
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+}
+
+#rank-card .card-header .d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#rank-card .card-header h5 {
+    margin: 0;
+}
+
+/* 序列选择下拉框样式 */
+#series-filter {
+    width: auto;
+    min-width: 120px;
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+    #rank-card .card-header .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    #series-filter {
+        width: 100%;
+    }
+}
+
+/* 职级分布对比表格中可点击单元格的样式 */
+.comparison-table .clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.comparison-table .clickable:hover {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.comparison-table .clickable::after {
+    content: '查看详情';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: #28a745;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.comparison-table .clickable:hover::after {
+    opacity: 1;
+}
+
+/* 表格样式优化 */
+.comparison-table td {
+    position: relative;
+    padding-right: 80px !important;
+} 
